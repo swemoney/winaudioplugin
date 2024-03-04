@@ -10,26 +10,33 @@
 
     internal static class DeviceHelpers
     {
-        public static String GetCommandDisplayName(String deviceId) => WinAudioPlugin.OutputDevices.TryGetDevice(deviceId, out var device) ? device.LongDisplayName : deviceId;
+        public static String GetCommandDisplayName(AudioDevices devices, String deviceId) => devices.TryGetDevice(deviceId, out var device) ? device.LongDisplayName : deviceId;
 
-        public static BitmapImage GetCommandImage(String deviceId)
+        public static BitmapImage GetCommandImage(AudioDevices devices, String deviceId)
         {
-            if (!WinAudioPlugin.OutputDevices.TryGetDevice(deviceId, out var device))
+            if (!devices.TryGetDevice(deviceId, out var device))
             {
                 return null;
             }
 
-            var bitmapFileName = device.IsDefault ? "OutputDeviceDefault.png" : "OutputDevice.png";
-
             using (var bitmapBuilder = new BitmapBuilder(PluginImageSize.Width90))
             {
                 bitmapBuilder.Clear(BitmapColor.Black);
-                var imageBytes = PluginResources.ReadBinaryFile(bitmapFileName);
-                bitmapBuilder.DrawImage(imageBytes, 0, 0);
+
+                var inputTypeName = devices.GetDataFlow() == NAudio.CoreAudioApi.DataFlow.Render ? "Output" : "Input";
+
+                var deviceTypeBytes = PluginResources.ReadBinaryFile($"Type{inputTypeName}.png");
+                bitmapBuilder.DrawImage(deviceTypeBytes, 32, 4);
 
                 if (device.SmallIcon != null)
                 {
-                    bitmapBuilder.DrawImage(device.SmallIcon, 61, 5);
+                    bitmapBuilder.DrawImage(device.SmallIcon, 60, 5);
+                }
+
+                if (device.IsDefault)
+                {
+                    var defaultCheckBytes = PluginResources.ReadBinaryFile("DefaultDevice.png");
+                    bitmapBuilder.DrawImage(defaultCheckBytes, 4, 4);
                 }
 
                 bitmapBuilder.DrawText(device.ShortDisplayName, 0, 22, 80, 58);

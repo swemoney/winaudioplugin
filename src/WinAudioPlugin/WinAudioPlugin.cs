@@ -10,7 +10,9 @@ namespace NotADoctor99.WinAudioPlugin
 
         public override Boolean HasNoApplication => true;
 
-        public static OutputDevices OutputDevices { get; } = new OutputDevices();
+        public static AudioDevices OutputDevices { get; } = new AudioDevices(NAudio.CoreAudioApi.DataFlow.Render);
+
+        public static AudioDevices InputDevices { get; } = new AudioDevices(NAudio.CoreAudioApi.DataFlow.Capture);
 
         public WinAudioPlugin()
         {
@@ -18,8 +20,14 @@ namespace NotADoctor99.WinAudioPlugin
             PluginResources.Init(this.Assembly);
         }
 
-        public override void Load() => Helpers.StartNewTask(() => WinAudioPlugin.OutputDevices.Start());
+        public override void Load() {
+            Helpers.StartNewTask(() => WinAudioPlugin.OutputDevices.Start());
+            Helpers.StartNewTask(() => WinAudioPlugin.InputDevices.Start());
+        }
 
-        public override void Unload() => WinAudioPlugin.OutputDevices.Stop();
+        public override void Unload() {
+            WinAudioPlugin.OutputDevices.Stop();
+            WinAudioPlugin.InputDevices.Stop();
+        }
     }
 }

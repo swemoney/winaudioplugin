@@ -49,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\DefaultInputDeviceCommand.cs" />
+    <Compile Include="Actions\DefaultInputDeviceControlCenter.cs" />
+    <Compile Include="Actions\MuteAllInputDevicesCommand.cs" />
     <Compile Include="Actions\MuteAllOutputDevicesCommand.cs" />
     <Compile Include="Actions\DefaultOutputDeviceCommand.cs" />
     <Compile Include="Actions\DefaultOutputDeviceControlCenter.cs" />
@@ -76,14 +79,13 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Actions\Images\OutputDevice.png" />
-    <EmbeddedResource Include="Actions\Images\OutputDeviceDefault.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="Actions\Images\ChangeDefaultInputDevice.png" />
     <EmbeddedResource Include="Actions\Images\ChangeDefaultOutputDevice.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="Actions\Images\DefaultDevice.png" />
+    <EmbeddedResource Include="Actions\Images\TypeInput.png" />
+    <EmbeddedResource Include="Actions\Images\MuteAllInputDevices.png" />
     <EmbeddedResource Include="Actions\Images\MuteAllOutputDevices.png" />
+    <EmbeddedResource Include="Actions\Images\TypeOutput.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

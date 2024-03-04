@@ -4,34 +4,34 @@ namespace NotADoctor99.WinAudioPlugin
 
     using Loupedeck;
 
-    public class DefaultOutputDeviceCommand : PluginTwoStateDynamicCommand
+    public class DefaultInputDeviceCommand : PluginTwoStateDynamicCommand
     {
         private readonly DictionaryNoCase<String> _deviceIds = new DictionaryNoCase<String>();
         private readonly DictionaryNoCase<String> _actionParameters = new DictionaryNoCase<String>();
 
-        public DefaultOutputDeviceCommand()
+        public DefaultInputDeviceCommand()
         {
-            this.GroupName = "Set Default Output Device";
-            this.Description = "Sets this device as default output device";
+            this.GroupName = "Set Default Input Device";
+            this.Description = "Sets this device as default input device";
 
-            this.SetOffStateDisplayName("Non-default output device");
-            this.SetOnStateDisplayName("Default output device");
+            this.SetOffStateDisplayName("Non-default input device");
+            this.SetOnStateDisplayName("Default input device");
 
             this.AddToggleCommand("Set default device").SetDescription(this.Description);
         }
 
         protected override Boolean OnLoad()
         {
-            WinAudioPlugin.OutputDevices.DeviceListChanged += this.OnDeviceListChanged;
-            WinAudioPlugin.OutputDevices.DefaultDeviceChanged += this.OnDefaultDeviceChanged;
+            WinAudioPlugin.InputDevices.DeviceListChanged += this.OnDeviceListChanged;
+            WinAudioPlugin.InputDevices.DefaultDeviceChanged += this.OnDefaultDeviceChanged;
 
             return true;
         }
 
         protected override Boolean OnUnload()
         {
-            WinAudioPlugin.OutputDevices.DeviceListChanged -= this.OnDeviceListChanged;
-            WinAudioPlugin.OutputDevices.DefaultDeviceChanged -= this.OnDefaultDeviceChanged;
+            WinAudioPlugin.InputDevices.DeviceListChanged -= this.OnDeviceListChanged;
+            WinAudioPlugin.InputDevices.DefaultDeviceChanged -= this.OnDefaultDeviceChanged;
 
             return true;
         }
@@ -40,12 +40,12 @@ namespace NotADoctor99.WinAudioPlugin
         {
             if (this.TryGetDeviceId(actionParameter, out var deviceId))
             {
-                WinAudioPlugin.OutputDevices.SetDefaultDevice(deviceId);
+                WinAudioPlugin.InputDevices.SetDefaultDevice(deviceId);
             }
         }
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
-            => this.TryGetDeviceId(actionParameter, out var deviceId) ? DeviceHelpers.GetCommandImage(WinAudioPlugin.OutputDevices, deviceId) : null;
+            => this.TryGetDeviceId(actionParameter, out var deviceId) ? DeviceHelpers.GetCommandImage(WinAudioPlugin.InputDevices, deviceId) : null;
 
         protected override String GetCommandDisplayName(String actionParameter, PluginImageSize imageSize) => actionParameter;
 
@@ -55,7 +55,7 @@ namespace NotADoctor99.WinAudioPlugin
         {
             this.RemoveAllParameters();
 
-            foreach (var device in WinAudioPlugin.OutputDevices.Devices)
+            foreach (var device in WinAudioPlugin.InputDevices.Devices)
             {
                 this._deviceIds[device.LongDisplayName] = device.Id;
                 this._actionParameters[device.Id] = device.LongDisplayName;

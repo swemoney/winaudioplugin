@@ -39,13 +39,13 @@ namespace NotADoctor99.WinAudioPlugin
             }
         }
 
-        public override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => DeviceHelpers.GetCommandImage(actionParameter);
+        public override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => DeviceHelpers.GetCommandImage(WinAudioPlugin.OutputDevices, actionParameter);
 
-        public override String GetCommandDisplayName(String actionParameter, PluginImageSize imageSize) => DeviceHelpers.GetCommandDisplayName(actionParameter);
+        public override String GetCommandDisplayName(String actionParameter, PluginImageSize imageSize) => DeviceHelpers.GetCommandDisplayName(WinAudioPlugin.OutputDevices, actionParameter);
 
         public override void RunCommand(String actionParameter) => WinAudioPlugin.OutputDevices.SetDefaultDevice(actionParameter);
 
-        private void OnDefaultDeviceChanged(Object sender, OutputDefaultDeviceEventArgs e)
+        private void OnDefaultDeviceChanged(Object sender, AudioDefaultDeviceEventArgs e)
         {
             this.CommandImageChanged(e.OldDeviceId);
             this.CommandImageChanged(e.NewDeviceId);
