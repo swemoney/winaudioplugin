@@ -58,10 +58,10 @@
     <Compile Include="WinAudioApplication.cs" />
     <Compile Include="WinAudioPlugin.cs" />
     <Compile Include="Helpers\PluginLog.cs" />
-    <Compile Include="WinAudio\OutputDevice.cs" />
-    <Compile Include="WinAudio\OutputDefaultDeviceEventArgs.cs" />
-    <Compile Include="WinAudio\OutputDevicesEventArgs.cs" />
-    <Compile Include="WinAudio\OutputDevices.cs" />
+    <Compile Include="WinAudio\AudioDefaultDeviceEventArgs.cs" />
+    <Compile Include="WinAudio\AudioDevice.cs" />
+    <Compile Include="WinAudio\AudioDevices.cs" />
+    <Compile Include="WinAudio\AudioDevicesEventArgs.cs" />
     <Compile Include="WinAudio\PolicyConfigClient.cs" />
   </ItemGroup>
   <ItemGroup>

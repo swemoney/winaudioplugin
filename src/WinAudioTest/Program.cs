@@ -3,25 +3,37 @@
     using System;
     using System.Diagnostics;
 
+    using NAudio.CoreAudioApi;
+
     internal class Program
     {
         static void Main(String[] _)
         {
-            var outputDevices = new OutputDevices();
-            outputDevices.DefaultDeviceChanged += OnDefaultOutputDeviceChanged;
-            outputDevices.DeviceListChanged += OutputDeviceListChanged;
+            TestAudioDevices(DataFlow.Render);
+            TestAudioDevices(DataFlow.Capture);
+
+            Console.WriteLine("Press any key to exit");
+            Console.ReadKey(true);
+        }
+
+        static void TestAudioDevices(DataFlow dataFlow)
+        {
+            var audioDevices = new AudioDevices(dataFlow);
+            audioDevices.DefaultDeviceChanged += OnDefaultAudioDeviceChanged;
+            audioDevices.DeviceListChanged += AudioDeviceListChanged;
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            outputDevices.Start();
+            audioDevices.Start();
 
-            Console.WriteLine($"> Start in {stopwatch.Elapsed.TotalMilliseconds:N0} ms");
+            Console.WriteLine($"> Start {dataFlow} AudioDevices in {stopwatch.Elapsed.TotalMilliseconds:N0} ms");
+            stopwatch.Stop();
 
             String device1Id = null;
             String device2Id = null;
 
-            foreach (var device in outputDevices.EnumerateDevices())
+            foreach (var device in audioDevices.EnumerateDevices())
             {
                 Console.WriteLine($"{device.LongDisplayName} | {device.Id}");
 
@@ -35,31 +47,29 @@
                 }
             }
 
-            var defaultDevice = outputDevices.GetDefaultDevice();
+            var defaultDevice = audioDevices.GetDefaultDevice();
             Console.WriteLine($"* {defaultDevice.LongDisplayName}");
 
-            outputDevices.SetDefaultDevice(device1Id);
+            audioDevices.SetDefaultDevice(device1Id);
             System.Threading.Thread.Sleep(1_000);
 
-            outputDevices.SetDefaultDevice(defaultDevice.Id);
+            audioDevices.SetDefaultDevice(defaultDevice.Id);
             System.Threading.Thread.Sleep(1_000);
 
-            outputDevices.SetDefaultDevice(device2Id);
+            audioDevices.SetDefaultDevice(device2Id);
             System.Threading.Thread.Sleep(1_000);
 
-            outputDevices.SetDefaultDevice(defaultDevice.Id);
+            audioDevices.SetDefaultDevice(defaultDevice.Id);
             System.Threading.Thread.Sleep(1_000);
 
-            Console.WriteLine("Press any key to exit");
-            Console.ReadKey(true);
-
-            outputDevices.Stop();
-            outputDevices.DefaultDeviceChanged -= OnDefaultOutputDeviceChanged;
-            outputDevices.DeviceListChanged += OutputDeviceListChanged;
+            audioDevices.Stop();
+            audioDevices.DefaultDeviceChanged -= OnDefaultAudioDeviceChanged;
+            audioDevices.DeviceListChanged += AudioDeviceListChanged;
         }
 
-        private static void OnDefaultOutputDeviceChanged(Object sender, OutputDefaultDeviceEventArgs e) => Console.WriteLine($"* {(sender as OutputDevices)?.GetDefaultDevice().LongDisplayName}");
+        private static void OnDefaultAudioDeviceChanged(Object sender, AudioDefaultDeviceEventArgs e) => Console.WriteLine($"* {(sender as AudioDevices)?.GetDefaultDevice().LongDisplayName}");
 
-        private static void OutputDeviceListChanged(Object sender, OutputDevicesEventArgs e) => Console.WriteLine($"? Device list changed");
+        private static void AudioDeviceListChanged(Object sender, AudioDevicesEventArgs e) => Console.WriteLine($"? Device list changed");
+
     }
 }
